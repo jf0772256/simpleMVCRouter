@@ -1,6 +1,6 @@
 <?php
 	
-	namespace Jesse\SimplifiedMVC;
+	namespace Jesse\SimplifiedMVC\Router;
 	
 	use InvalidArgumentException;
 	
