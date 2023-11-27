@@ -3,8 +3,8 @@
 	namespace Jesse\SimplifiedMVC\Router;
 	
 	use Exception;
-	use Jesse\SimplifiedMVC\Exception\BadRequest;
-	use Jesse\SimplifiedMVC\Utilities\URL;
+	use Jesse\SimplifiedMVC\Router\Exception\BadRequest;
+	use Jesse\SimplifiedMVC\Router\Utilities\URL;
 	
 	class Request
 	{
