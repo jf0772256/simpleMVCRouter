@@ -1,6 +1,6 @@
 <?php
 	
-	namespace Jesse\SimplifiedMVC\Utilities;
+	namespace Jesse\SimplifiedMVC\Router\Utilities;
 	
 	class URL
 	{
