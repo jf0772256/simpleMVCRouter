@@ -14,7 +14,7 @@
 		private bool $overwrittenMethod = false;
 		public array $params = [];
 		public string $contentType = "";
-		public string $contentTypeExpected = "";
+		public string $contentTypeExpected = "application/x-www-form-urlencoded";
 		private static URL $url;
 		public function getPath() : string
 		{
