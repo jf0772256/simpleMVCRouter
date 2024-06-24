@@ -183,7 +183,8 @@
 		}
 		private function buildParamsIndexArray(array &$uri, array &$uriPathArray, array &$indexes, bool &$matchFailed) : void
 		{
-			foreach($uri as $index => $param){
+			foreach($uri as $index => $param)
+			{
 				if(preg_match("/{.*}/", $param)) $indexes[] = $index;
 				else {
 					//see if uri path array has the same value, if not then it's not a match and should be broken out of and to the next...
