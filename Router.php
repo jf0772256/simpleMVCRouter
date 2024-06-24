@@ -2,14 +2,17 @@
 	
 	namespace Jesse\SimplifiedMVC\Router;
 	
+	use Closure;
 	use Exception;
 	use Jesse\SimplifiedMVC\Router\Exception\NotFound;
-	use Jesse\SimplifiedMVC\Middleware\Middleware;
 	
 	class Router extends IRouter
 	{
 		private Request $request;
 		private Response $response;
+		private string|null $MiddlewareClass = null;
+		private string|null $applicationClass = null;
+		private bool $usingFacade = false;
 		function __construct(Request $request, Response $response)
 		{
 			// Set up the parent class
@@ -17,6 +20,13 @@
 			$this->request = $request;
 			$this->response = $response;
 		}
+		protected function __set_facade_classes($application, $middleware = null): void
+		{
+			$this->applicationClass = $application;
+			$this->MiddlewareClass = $middleware;
+			$this->usingFacade = true;
+		}
+		
 		/**
 		 * Takes an instance of Router and combines it to the router that use is called from. Routes with the same
 		 * method=>route in the use() will overwrite the existing route.
@@ -89,6 +99,17 @@
 		 */
 		public function resolve() : mixed
 		{
+			//set up for facade loading
+			if ($this->usingFacade)
+			{
+				$middleware = $this->MiddlewareClass;
+				$application = $this->applicationClass;
+			}
+			else
+			{
+				$middleware = Middleware::class;
+				$application = Application::class;
+			}
 			$path = $this->request->getPath();
 			$method = $this->request->method();
 			$path = $this->request->parameterSearch($this->requestRoutesArray($this,$method), $path);
@@ -105,7 +126,7 @@
 			
 			try
 			{
-				Middleware::resolve($data['middleware']);
+				call_user_func([$middleware, 'resolve'], $data['middleware']);
 			}
 			catch (Exception $ex)
 			{
@@ -116,7 +137,7 @@
 			if (is_string($callback))
 			{
 				// this is a loaded view
-				return Application::$app->view->renderView($callback, ["title" => $callback, "params" => $this->request->params]);
+				return $application::$app->view->renderView($callback, ["title" => $callback, "params" => $this->request->params]);
 				// not yet implemented
 				//throw new Exception("Not Yet Implemented", 404);
 			}
@@ -128,7 +149,7 @@
 				 * @var Controller $controller
 				 */
 				$controller = new $callback[0];
-				Application::$app->controller = $controller;
+				$application::$app->controller = $controller;
 				$controller->action = $callback[1];
 				$callback[0] = $controller;
 				// not yet implemented
