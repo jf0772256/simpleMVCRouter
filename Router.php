@@ -31,12 +31,16 @@
 		 * Takes an instance of Router and combines it to the router that use is called from. Routes with the same
 		 * method=>route in the use() will overwrite the existing route.
 		 *
-		 * @param Router $router router with routes defined
+		 * @param Router|string $router router with routes defined, if passing as a string, pass the name of the routes file, less the extension
 		 *
-		 * @return void
+		 * @return Router
 		 */
-		public function use(Router $router) : self
+		public function use(Router|string $router) : self
 		{
+			// if just the file name is passed we will need to go pull the file in and get the router from the file... then proceed as normal
+			if (!$router instanceof Router) {
+				$router = require_once dirname(__DIR__, 2) . "/routes/{$router}.php";
+			}
 			$_incomingRoutes = $router->requestRoutesArray($this);
 			foreach ($_incomingRoutes as $method => $routeArray)
 			{
