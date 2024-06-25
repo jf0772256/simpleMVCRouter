@@ -12,13 +12,15 @@
 		private Response $response;
 		private string|null $MiddlewareClass = null;
 		private string|null $applicationClass = null;
+		private string $routesPath = "";
 		private bool $usingFacade = false;
-		function __construct(Request $request, Response $response)
+		function __construct(Request $request, Response $response, ?string $routesPath = "")
 		{
 			// Set up the parent class
 			parent::__construct();
 			$this->request = $request;
 			$this->response = $response;
+			$this->routesPath = $routesPath;
 		}
 		protected function __set_facade_classes($application, $middleware = null): void
 		{
@@ -39,7 +41,7 @@
 		{
 			// if just the file name is passed we will need to go pull the file in and get the router from the file... then proceed as normal
 			if (!$router instanceof Router) {
-				$router = require_once dirname(__DIR__, 2) . "/routes/{$router}.php";
+				$router = require_once $this->routesPath . "{$router}.php";
 			}
 			$_incomingRoutes = $router->requestRoutesArray($this);
 			foreach ($_incomingRoutes as $method => $routeArray)
