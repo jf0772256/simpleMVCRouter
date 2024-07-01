@@ -15,6 +15,7 @@
 		private string $routesPath = "";
 		private bool $usingFacade = false;
 		private string $routePrefix = "";
+		private string $routeControllerClass = "";
 		function __construct(Request $request, Response $response, ?string $routesPath = "")
 		{
 			// Set up the parent class
@@ -56,31 +57,37 @@
 		}
 		public function get (string $route, array|callable|string $action) : self
 		{
+			$action = (!empty($this->routeControllerClass) && !is_callable($action)) ? [$this->routeControllerClass, $action] : $action;
 			parent::add('get', $this->routePrefix . $route, $action);
 			return $this;
 		}
 		public function post (string $route, array|callable|string $action) : self
 		{
+			$action = (!empty($this->routeControllerClass) && !is_callable($action)) ? [$this->routeControllerClass, $action] : $action;
 			parent::add('post', $this->routePrefix . $route, $action);
 			return $this;
 		}
 		public function put (string $route, array|callable|string $action) : self
 		{
+			$action = (!empty($this->routeControllerClass) && !is_callable($action)) ? [$this->routeControllerClass, $action] : $action;
 			parent::add('put', $this->routePrefix . $route, $action);
 			return $this;
 		}
 		public function patch (string $route, array|callable|string $action) : self
 		{
+			$action = (!empty($this->routeControllerClass) && !is_callable($action)) ? [$this->routeControllerClass, $action] : $action;
 			parent::add('patch', $this->routePrefix . $route, $action);
 			return $this;
 		}
 		public function delete (string $route, array|callable|string $action) : self
 		{
+			$action = (!empty($this->routeControllerClass) && !is_callable($action)) ? [$this->routeControllerClass, $action] : $action;
 			parent::add('delete', $this->routePrefix . $route, $action);
 			return $this;
 		}
 		public function update (string $route, array|callable|string $action) : self
 		{
+			$action = (!empty($this->routeControllerClass) && !is_callable($action)) ? [$this->routeControllerClass, $action] : $action;
 			parent::add('update', $this->routePrefix . $route, $action);
 			return $this;
 		}
@@ -119,6 +126,26 @@
 		public function prefix(string $prefix) : self
 		{
 			$this->routePrefix = $prefix;
+			return $this;
+		}
+		
+		/**
+		 * Allow router to preset controller class, if set then it will append the method to the action callback.
+		 * This is instance wide, and can be reset if needed after added by calling it again with empty arguments list.
+		 * ```
+		 *    $router = new Router($req, $res);
+		 *    $router->controller(User::class)->prefix('/user');
+		 *    // to clear class and set to the normal way::
+		 *    $router->controller()->prefix('/user');
+		 * ```
+		 *
+		 * @param string|null $controller Controller class string, invoke it by calling [CLASSNAME]::class EG User::class see example above
+		 *
+		 * @return $this returns Router and is chainable
+		 */
+		public function controller(?string $controller = "") : self
+		{
+			$this->routeControllerClass = $controller;
 			return $this;
 		}
 		
