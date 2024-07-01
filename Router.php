@@ -14,6 +14,7 @@
 		private string|null $applicationClass = null;
 		private string $routesPath = "";
 		private bool $usingFacade = false;
+		private string $routePrefix = "";
 		function __construct(Request $request, Response $response, ?string $routesPath = "")
 		{
 			// Set up the parent class
@@ -55,32 +56,32 @@
 		}
 		public function get (string $route, array|callable|string $action) : self
 		{
-			parent::add('get', $route, $action);
+			parent::add('get', $this->routePrefix . $route, $action);
 			return $this;
 		}
 		public function post (string $route, array|callable|string $action) : self
 		{
-			parent::add('post', $route, $action);
+			parent::add('post', $this->routePrefix . $route, $action);
 			return $this;
 		}
 		public function put (string $route, array|callable|string $action) : self
 		{
-			parent::add('put', $route, $action);
+			parent::add('put', $this->routePrefix . $route, $action);
 			return $this;
 		}
 		public function patch (string $route, array|callable|string $action) : self
 		{
-			parent::add('patch', $route, $action);
+			parent::add('patch', $this->routePrefix . $route, $action);
 			return $this;
 		}
 		public function delete (string $route, array|callable|string $action) : self
 		{
-			parent::add('delete', $route, $action);
+			parent::add('delete', $this->routePrefix . $route, $action);
 			return $this;
 		}
 		public function update (string $route, array|callable|string $action) : self
 		{
-			parent::add('update', $route, $action);
+			parent::add('update', $this->routePrefix . $route, $action);
 			return $this;
 		}
 		
@@ -94,6 +95,30 @@
 		public function only(string $key) : self
 		{
 			$this->middleware($key);
+			return $this;
+		}
+		
+		public function except(string $key) : self { return $this; }
+		
+		/**
+		 * Set a prefix for the route object. Namely used when including routes files.
+		 * All routes in the route object will use the prefix.
+		 * ```
+		 *     $router = new Router($request, $response);
+		 *     $router->prefix('/api/v1');
+		 *     $router->get('/user/{id}')->only('api-auth');
+		 *     // is the same as:
+		 *     $router->get('/api/v1/user/{id}')->only('api-auth');
+		 * ```
+		 *
+		 * @param string $prefix string representing all front values of the route path, must have leading '/' char
+		 *
+		 * @return $this this method is chainable
+		 *@example
+		 */
+		public function prefix(string $prefix) : self
+		{
+			$this->routePrefix = $prefix;
 			return $this;
 		}
 		
