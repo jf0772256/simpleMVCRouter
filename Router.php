@@ -118,12 +118,12 @@
 		 *     $router->get('/api/v1/user/{id}')->only('api-auth');
 		 * ```
 		 *
-		 * @param string $prefix string representing all front values of the route path, must have leading '/' char
+		 * @param string|null $prefix string representing all front values of the route path, must have leading '/' char, if no arguments will clear prefix
 		 *
 		 * @return $this this method is chainable
-		 *@example
+		 * @example
 		 */
-		public function prefix(string $prefix) : self
+		public function prefix(?string $prefix = "") : self
 		{
 			$this->routePrefix = $prefix;
 			return $this;
