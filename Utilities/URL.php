@@ -14,10 +14,10 @@
 		function __construct (array &$server)
 		{
 			// build URL class properties from server
-			$this->protocol = $server['REQUEST_SCHEME'];
+			$this->protocol = $server['REQUEST_SCHEME']??'http';
 			$this->host = $server['HTTP_HOST'];
 			$this->requestUri = (explode('?',$server['REQUEST_URI']))[0];
-			$this->queryString = $server['QUERY_STRING'];
+			$this->queryString = $server['QUERY_STRING']??'';
 			$this->parseQueryString();
 			//rebuild the query string , minus signature if it was passed...
 			$this->queryString = count($this->queryArray) !== 0 ? http_build_query($this->queryArray, '', '&') : '';
