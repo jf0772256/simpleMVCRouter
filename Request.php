@@ -16,6 +16,10 @@
 		public string $contentType = "";
 		public string $contentTypeExpected = "application/x-www-form-urlencoded";
 		private static URL $url;
+		public function __construct()
+		{
+			$this->url = new URL($_SERVER);
+		}
 		public function getPath() : string
 		{
 			$params = static::$url->getQueryValuesArray();
