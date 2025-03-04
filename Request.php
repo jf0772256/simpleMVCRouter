@@ -15,16 +15,16 @@
 		public array $params = [];
 		public string $contentType = "";
 		public string $contentTypeExpected = "application/x-www-form-urlencoded";
-		private static URL $url;
+		private URL $url;
 		public function __construct()
 		{
 			$this->url = new URL($_SERVER);
 		}
 		public function getPath() : string
 		{
-			$params = static::$url->getQueryValuesArray();
+			$params = $this->url->getQueryValuesArray();
 			foreach ($params as $key => $value) $this->params[$key] = $value;
-			return static::$url->getRequestUri();
+			return $this->url->getRequestUri();
 		}
 		public function method() : string {
 			$this->overwrittenMethod = $this->isOtherRequestType();
@@ -220,9 +220,9 @@
 			if ($ct !== $this->contentTypeExpected) throw new BadRequest("CONTENT.TYPE.MISMATCH", 400);
 			$this->contentType = $ct;
 		}
-		public static function setUrl (URL $url) : void
+		public function setUrl (URL $url) : void
 		{
-			static::$url = $url;
+			$this->url = $url;
 		}
-		public static function getUrl() : URL { return static::$url; }
+		public function getUrl() : URL { return $this->url; }
 	}
