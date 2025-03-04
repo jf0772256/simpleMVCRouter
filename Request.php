@@ -207,7 +207,7 @@
 			foreach ($indexes as $key => $index) {
 				// Uh... Oh something went wrong here
 				if(empty($uriPathArray[$index])) return false;
-				$params[$paramNames[$key]] = $uriPathArray[$index];
+				$params[$paramNames[$key]] = urldecode($uriPathArray[$index]);
 			}
 			return true;
 		}
