@@ -15,8 +15,8 @@
 		{
 			// build URL class properties from server
 			$this->protocol = $server['REQUEST_SCHEME']??'http';
-			$this->host = $server['HTTP_HOST'];
-			$this->requestUri = (explode('?',$server['REQUEST_URI']))[0];
+			$this->host = $server['HTTP_HOST']??'localhost';
+			$this->requestUri = (explode('?',$server['REQUEST_URI']??""))[0];
 			$this->queryString = $server['QUERY_STRING']??'';
 			$this->parseQueryString();
 			//rebuild the query string , minus signature if it was passed...
